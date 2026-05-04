@@ -17,20 +17,20 @@ next_id = 0
 
 tasks_base = {}
 
-
+#Create JSON in the folder if it doesnt exist or access one if it is already created
 import json
 import os
 if os.path.exists("tasks.json"):
     with open("tasks.json", "r") as file:
         tasks_base = json.load(file)
         if tasks_base:
-            tasks_base = {int(task_id): task_values_with_the_id for task_id, task_values_with_the_id in tasks_base.items()}
-            next_id = max(tasks_base.keys())
+            tasks_base = {int(task_id): task_values_with_the_id for task_id, task_values_with_the_id in tasks_base.items()} # chainging int in python to string in JSON
+            next_id = max(tasks_base.keys()) # I need unique IDs so any new tasks will get numbers from the current max ID in the file - not to override one another
 def save_tasks():
     with open("tasks.json", "w") as file:
-        json.dump(tasks_base, file, indent=4)
+        json.dump(tasks_base, file, indent=4) # formatting the JSON nicely
 
-# Setting upd date of creation & date pof the update
+# Setting up date of creation & date of the update
 from datetime import datetime
 
 #Setting up the While loop for the actual logic:
@@ -64,7 +64,7 @@ while True:
         else:
             (print(f"Task {select_task_id }not found! in the database")) # Here I am doing a failsafe in case ID is not found so user sees error
     elif select_action == "delete":
-        select_task_id = int(input("provide id of the task to delete: "))
+        select_task_id = int(input("provide id of the task to delete: ")) # I am providing the ID of the task I want to delete and ask user for confirmation
         if select_task_id in tasks_base:
             confirm_deletion = input(f"Are you sure you want to delete the task with ID {select_task_id}? (y/n): ").lower()
             if confirm_deletion == "y":
@@ -81,17 +81,18 @@ while True:
         if not tasks_base:
             print("Tasks list is empty!")
         else:
-            filter_status = input("Select which tasks to view: '1' for All, '2' for to-do, '3' in progress, '4' done")
+            filter_status = input("Select which tasks to view: '1' for All, '2' for todo, '3' in progress, '4' done") # when asking for a list of tasks it is easier to use number rather than type the status
+            #I need to create a "dictionary" and connect number with an actual status
             if filter_status == "1":
                 status_name = "All"
             elif filter_status == "2":
-                status_name = "to-do"
+                status_name = "todo"
             elif filter_status == "3":
                 status_name = "in progress"
             elif filter_status == "4":
                 status_name = "done"
             else:
-                status_name = "All"
+                status_name = "All" # If user types anything else let pull list of all tasks - just for the sake of making it easier
             print(f"Tasks available in database:")
             for task in tasks_base.values():
                 if status_name == "All" or task["status"] == status_name:
@@ -107,5 +108,5 @@ while True:
     elif select_action == "q":
         exit()
     else:
-        print("Invalid action, please try again!")
+        print("Invalid action, please try again!") # Failsafe in case of a typo when selecting the action so the program doesnt colapse and turns off  it gets back to the beggninig
         continue
