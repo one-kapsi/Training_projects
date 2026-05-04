@@ -77,17 +77,33 @@ while True:
             print(f"Task {select_task_id }not found!")
             continue
     elif select_action == "list":
+        found_tasks = False
         if not tasks_base:
             print("Tasks list is empty!")
         else:
+            filter_status = input("Select which tasks to view: '1' for All, '2' for to-do, '3' in progress, '4' done")
+            if filter_status == "1":
+                status_name = "All"
+            elif filter_status == "2":
+                status_name = "to-do"
+            elif filter_status == "3":
+                status_name = "in progress"
+            elif filter_status == "4":
+                status_name = "done"
+            else:
+                status_name = "All"
             print(f"Tasks available in database:")
             for task in tasks_base.values():
-                print(f"Task ID: {task ['ID']}")
-                print(f"Task name: {task ['name']}")
-                print(f"Task status: {task['status']}")
-                print(f"Task createdAt: {task ['createdAt']}")
-                print(f"Task updatedAt: {task ['updatedAt']}")
-                print("-----")
+                if status_name == "All" or task["status"] == status_name:
+                    found_tasks = True
+                    print(f"Task ID: {task ['ID']}")
+                    print(f"Task name: {task ['name']}")
+                    print(f"Task status: {task['status']}")
+                    print(f"Task createdAt: {task ['createdAt']}")
+                    print(f"Task updatedAt: {task ['updatedAt']}")
+                    print("-----")
+            if not found_tasks:
+                    print(f"No tasks found for {status_name}")
     elif select_action == "q":
         exit()
     else:
