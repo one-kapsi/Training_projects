@@ -81,12 +81,12 @@ while True:
             print("Tasks list is empty!")
         else:
             print(f"Tasks available in database:")
-            for task in tasks_base:
-                print(f"Task ID: {tasks_base[task]['ID']}")
-                print(f"Task name: {tasks_base[task]['name']}")
-                print(f"Task status: {tasks_base[task]['status']}")
-                print(f"Task createdAt: {tasks_base[task]['createdAt']}")
-                print(f"Task updatedAt: {tasks_base[task]['updatedAt']}")
+            for task in tasks_base.values():
+                print(f"Task ID: {task ['ID']}")
+                print(f"Task name: {task ['name']}")
+                print(f"Task status: {task['status']}")
+                print(f"Task createdAt: {task ['createdAt']}")
+                print(f"Task updatedAt: {task ['updatedAt']}")
                 print("-----")
     elif select_action == "q":
         exit()
