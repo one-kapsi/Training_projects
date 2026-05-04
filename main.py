@@ -66,15 +66,23 @@ while True:
     elif select_action == "delete":
         select_task_id = int(input("provide id of the task to delete: "))
         if select_task_id in tasks_base:
-            del tasks_base[select_task_id]
-            save_tasks()
-            print(f"Task {select_task_id} deleted successfully")
+            confirm_deletion = input(f"Are you sure you want to delete the task with ID {select_task_id}? (y/n): ").lower()
+            if confirm_deletion == "y":
+                del tasks_base[select_task_id]
+                print(f"Task {select_task_id} deleted successfully")
+                save_tasks()
+            else:
+                print(f"Task {select_task_id} was not deleted")
+        else:
+            print(f"Task {select_task_id }not found!")
+            continue
     elif select_action == "list":
         if not tasks_base:
             print("Tasks list is empty!")
         else:
             print(f"Tasks available in database:")
             for task in tasks_base:
+                print(f"Task ID: {tasks_base[task]['ID']}")
                 print(f"Task name: {tasks_base[task]['name']}")
                 print(f"Task status: {tasks_base[task]['status']}")
                 print(f"Task createdAt: {tasks_base[task]['createdAt']}")
@@ -82,3 +90,6 @@ while True:
                 print("-----")
     elif select_action == "q":
         exit()
+    else:
+        print("Invalid action, please try again!")
+        continue
