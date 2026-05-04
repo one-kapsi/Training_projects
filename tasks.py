@@ -39,13 +39,13 @@ if len(sys.argv) < 2:
     print("Available actions: add, update, delete, list")
     exit()
 
-    select_action = sys.argv[1]
+select_action = sys.argv[1]
 
 if select_action == "add":
-    if len(sys.argv) < 3:
+    if len(sys.argv) >= 3:
         now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        task_name = input("Task name: ")
-        task_status = input("Task status (todo, in-progress, done): ")
+        task_name = sys.argv[2]
+        task_status = sys.argv[3] if len(sys.argv) <= 3 else "todo"
         next_id += 1
         new_task = {
                 "name": task_name,
