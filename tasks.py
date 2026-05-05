@@ -45,7 +45,7 @@ if select_action == "add":
     if len(sys.argv) >= 3:
         now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         task_name = sys.argv[2]
-        task_status = sys.argv[3] if len(sys.argv) <= 3 else "todo"
+        task_status = sys.argv[3] if len(sys.argv) >= 4 else "todo"
         next_id += 1
         new_task = {
                 "name": task_name,
@@ -72,47 +72,37 @@ elif select_action == "update":
         print("Missing arguments")
         print("Correct usage: 'python tasks.py update 1 todo'")
 elif select_action == "delete":
-    select_task_id = int(input("provide id of the task to delete: ")) # I am providing the ID of the task I want to delete and ask user for confirmation
-    if select_task_id in tasks_base:
-        confirm_deletion = input(f"Are you sure you want to delete the task with ID {select_task_id}? (y/n): ").lower()
-        if confirm_deletion == "y":
-            del tasks_base[select_task_id]
-            print(f"Task {select_task_id} deleted successfully")
-            save_tasks()
+    if len(sys.argv) >= 3:
+        select_task_id = int(sys.argv[2])
+        if select_task_id in tasks_base:
+            confirm_deletion = input(f"Are you sure you want to delete the task with ID {select_task_id}? (y/n): ").lower()
+            if confirm_deletion == "y":
+                del tasks_base[select_task_id]
+                print(f"Task {select_task_id} deleted successfully")
+                save_tasks()
+            else:
+                print(f"Task {select_task_id} was not deleted")
         else:
-            print(f"Task {select_task_id} was not deleted")
+            print(f"Task {select_task_id} was not found")
     else:
-        print(f"Task {select_task_id }not found!")
+        print("Missing arguments")
 elif select_action == "list":
-    found_tasks = False
+    filter_status = sys.argv[2] if len(sys.argv) >= 3 else "all"
     if not tasks_base:
         print("Tasks list is empty!")
     else:
-        filter_status = input("Select which tasks to view: '1' for All, '2' for todo, '3' in progress, '4' done") # when asking for a list of tasks it is easier to use number rather than type the status
-            #I need to create a "dictionary" and connect number with an actual status
-        if filter_status == "1":
-                status_name = "All"
-        elif filter_status == "2":
-                status_name = "todo"
-        elif filter_status == "3":
-                status_name = "in progress"
-        elif filter_status == "4":
-                status_name = "done"
-        else:
-            status_name = "All" # If user types anything else let pull list of all tasks - just for the sake of making it easier
-            print(f"Tasks available in database:")
-        for task in tasks_base.values():
-            if status_name == "All" or task["status"] == status_name:
-                    found_tasks = True
-                    print(f"Task ID: {task ['ID']}")
-                    print(f"Task name: {task ['name']}")
-                    print(f"Task status: {task['status']}")
-                    print(f"Task createdAt: {task ['createdAt']}")
-                    print(f"Task updatedAt: {task ['updatedAt']}")
-                    print("-----")
-            if not found_tasks:
-                    print(f"No tasks found for {status_name}")
-elif select_action == "q":
-        exit()
+       print(f"Tasks with status: {filter_status} ")
+       found_tasks = False
+       for task in tasks_base.values():
+                if filter_status == "all" or task["status"] == filter_status:
+                        found_tasks = True
+                        print(f"Task ID: {task ['ID']}")
+                        print(f"Task name: {task ['name']}")
+                        print(f"Task status: {task['status']}")
+                        print(f"Task createdAt: {task ['createdAt']}")
+                        print(f"Task updatedAt: {task ['updatedAt']}")
+                        print("-----")
+       if not found_tasks:
+           print(f"No tasks found for {filter_status}")
 else:
     print("Invalid action, please try again!") # Failsafe in case of a typo when selecting the action so the program doesnt colapse and turns off  it gets back to the beggninig
