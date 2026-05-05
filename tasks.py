@@ -58,16 +58,19 @@ if select_action == "add":
         save_tasks()
         print(f"Task added successfully, ID: {next_id}")
 elif select_action == "update":
-    select_task_id = int(input("provide id of the task to update: ")) # I need to have interger as input always returns string
-    if select_task_id in tasks_base: #checking if the task id exists
-        updated_status = input(" provide new status ( todo, in-progress, done): ") # providing new status
-        tasks_base[select_task_id]["status"] = updated_status # Now I need to get into the base of tasks and look for ID from the input
-                                                                    # and I am looking at status in the new_task variable
-        tasks_base[select_task_id]["updatedAt"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        save_tasks()
-        print(f"Task {select_task_id} updated successfully")
-    else:
-        (print(f"Task {select_task_id }not found! in the database")) # Here I am doing a failsafe in case ID is not found so user sees error
+    if len(sys.argv) >= 4:
+        select_task_id = int(sys.argv[2])     # I need to have integer to correctly look for ID which is a number
+        if select_task_id in tasks_base: #checking if the task id exists
+            updated_status = sys.argv[3] # providing new status
+            tasks_base[select_task_id]["status"] = updated_status # Here I am updating status of the task I selected
+            tasks_base[select_task_id]["updatedAt"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S") #Here I am looking for a task with selected ID in my tasks basket to update time stamp
+            save_tasks() # this is used by system to save updates in JSON
+            print(f"Task {select_task_id} updated successfully")
+        else:
+            print (f"Task {select_task_id} was not found") # in case user typed the ID of the task that does not exist they will see meaningful error message
+    else: # this else refers to the sys.argv function ( in case user type not enough arguments)
+        print("Missing arguments")
+        print("Correct usage: 'python tasks.py update 1 todo'")
 elif select_action == "delete":
     select_task_id = int(input("provide id of the task to delete: ")) # I am providing the ID of the task I want to delete and ask user for confirmation
     if select_task_id in tasks_base:
